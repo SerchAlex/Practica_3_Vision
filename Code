@@ -1,0 +1,136 @@
+import numpy as np
+from matplotlib import pyplot as plt
+import cv2
+
+#Leemos y reescalamos las imagenes a ecualizar
+revo = cv2.imread('Revo.png',1)
+revo = cv2.resize(revo, (268, 348), interpolation=cv2.INTER_CUBIC)
+chucho = cv2.imread('Chuchito.png',1)
+chucho = cv2.resize(chucho, (268, 348), interpolation=cv2.INTER_CUBIC)
+
+
+color = ('b', 'g', 'r')
+a = 0
+suma = cv2.add(revo, chucho)
+
+
+hist_revo = 0
+
+#Parametros para la rotacion
+ancho = suma.shape[1] #columnas
+alto = suma.shape[0] # filas
+
+for i in range(0, 17):
+    a += 1
+    if a == 1:
+        suma 
+        concat_1 = cv2.hconcat([revo, suma, chucho])
+        cv2.imshow('suma', concat_1)
+        cv2.waitKey(0)
+        for j, k in enumerate(color):
+            hist_revo = cv2.calcHist([revo], [j], None, [256], [0, 256])
+            plt.plot(hist_revo, color = k)
+            plt.xlim([0,256])
+        plt.xlabel('Iluminacion')
+        plt.ylabel('Pixeles')
+        plt.show()
+        for j, k in enumerate(color):
+            hist_revo = cv2.calcHist([suma], [j], None, [256], [0, 256])
+            plt.plot(hist_revo, color = k)
+            plt.xlim([0,256])
+        plt.xlabel('Iluminacion')
+        plt.ylabel('Pixeles')
+        plt.show()
+        cv2.destroyAllWindows()
+        
+    elif a == 2:
+        resta = cv2.subtract(revo, chucho)
+        concat_2 = cv2.hconcat([revo, resta, chucho])
+        cv2.imshow('Resta', concat_2)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    elif a == 3:
+        multi = cv2.multiply(revo, chucho)
+        concat_3 = cv2.hconcat([revo, multi, chucho])
+        cv2.imshow('Multiplicacion', concat_3)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    elif a == 4:
+        divi = cv2.divide(revo, chucho)
+        concat_4 = cv2.hconcat([revo, divi, chucho])
+        cv2.imshow('Division', concat_4)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    elif a == 5:
+        c = 300 / np.log(1 + np.max(suma))
+        ln = c * (np.log(suma + 1))
+        ln = np.array(ln, dtype = np.uint8)
+        np.seterr(divide = 'ignore')
+        concat_5 = cv2.hconcat([revo, ln, chucho])
+        cv2.imshow('Logaritmo Natual', concat_5)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+   # elif a == 6:
+    #    raiz = cv2.pow(suma, 1/2)
+     #   cv2.imshow('Raiz', raiz)
+      #  cv2.waitKey(0)
+       # cv2.destroyAllWindows()
+    elif a == 8:
+        poten = cv2.pow(suma, 3)
+        concat_8 = cv2.hconcat([revo, poten, chucho])
+        cv2.imshow('Potencia', concat_8)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    elif a == 9:
+        conjun = cv2.bitwise_and(revo, chucho)
+        concat_9 = cv2.hconcat([revo, conjun, chucho])
+        cv2.imshow('Conjuncion(AND)', concat_9)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    elif a == 10:
+        disyu = cv2.bitwise_or(revo, chucho)
+        concat_10 = cv2.hconcat([revo, disyu, chucho])
+        cv2.imshow('Disyuncion(OR)', concat_10)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    elif a == 11:
+        nega = cv2.bitwise_not(suma)
+        concat_11 = cv2.hconcat([revo, nega, chucho])
+        cv2.imshow('Negacion(NOT)', concat_11)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    elif a == 12:
+        T = np.float32([[1,0,100],[0,1,150]])
+        tras = cv2.warpAffine(suma, T, (268, 348))
+        concat_12 = cv2.hconcat([revo, tras, chucho])
+        cv2.imshow('Traslacion', concat_12)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    elif a == 13:
+        esc = cv2.resize(suma, (170, 220), interpolation=cv2.INTER_CUBIC)
+        cv2.imshow('Escalado', esc)
+        cv2.imshow('Revo', revo)
+        cv2.imshow('Chucho', chucho)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    elif a == 14:
+        R = cv2.getRotationMatrix2D((ancho//2,alto//2),20,1)
+        rota = cv2.warpAffine(suma, R, (ancho, alto))
+        concat_14 = cv2.hconcat([revo, rota, chucho])
+        cv2.imshow('Rotacion', concat_14)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    elif a == 15:
+        T_f = np.float32([[1,0,200],[0,1,300]])
+        tras_fin = cv2.warpAffine(suma, T_f, (268, 348))
+        concat_15 = cv2.hconcat([revo, tras_fin, chucho])
+        cv2.imshow('Traslacion a Fin', concat_15)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+        
+    elif a == 3:
+        break
+
+  
+   
