@@ -8,7 +8,16 @@ revo = cv2.resize(revo, (268, 348), interpolation=cv2.INTER_CUBIC)
 chucho = cv2.imread('Chuchito.png',1)
 chucho = cv2.resize(chucho, (268, 348), interpolation=cv2.INTER_CUBIC)
 
+#Ecualizamos las imagenes
+revo_eq = cv2.cvtColor(revo, cv2.COLOR_BGR2YCrCb)  # From RBG to YcrCb
+revo_eq[:,:,0] = cv2.equalizeHist(revo_eq[:,:,0])  #Ecualizar imagen
+revo_eq1 = cv2.cvtColor(revo_eq, cv2.COLOR_YCrCb2BGR)
 
+chucho_eq = cv2.cvtColor(chucho, cv2.COLOR_BGR2YCrCb)  # From RBG to YcrCb
+chucho_eq[:,:,0] = cv2.equalizeHist(chucho_eq[:,:,0])  #Ecualizar imagen
+chucho_eq1 = cv2.cvtColor(chucho_eq, cv2.COLOR_YCrCb2BGR)
+
+# Definimos los colores para los canales BGR e inicializamos contador 'a' y  'suma'
 color = ('b', 'g', 'r')
 a = 0
 suma = cv2.add(revo, chucho)
@@ -19,36 +28,146 @@ hist_revo = 0
 #Parametros para la rotacion
 ancho = suma.shape[1] #columnas
 alto = suma.shape[0] # filas
+#**********************************************************************************************************************************************************
 
-for i in range(0, 17):
-    a += 1
+#Loop para operar imagenes
+for i in range(0, 17):                      
+    a += 1                         #Contador para alternar la operacion con if
     if a == 1:
-        suma 
+        suma                    # Suma
         concat_1 = cv2.hconcat([revo, suma, chucho])
         cv2.imshow('suma', concat_1)
         cv2.waitKey(0)
+#**********************************************************************************************************************************************************        
+        # Histogramas en BGR, se guarda como .png y se muestra concatenado 
         for j, k in enumerate(color):
             hist_revo = cv2.calcHist([revo], [j], None, [256], [0, 256])
             plt.plot(hist_revo, color = k)
             plt.xlim([0,256])
         plt.xlabel('Iluminacion')
         plt.ylabel('Pixeles')
-        plt.show()
+        plt.savefig("histograma_revoo.png")
+        hist_revo_png = cv2.imread('histograma_revoo.png',1)
+        hist_revo_png = cv2.resize(hist_revo_png, (268, 348), interpolation=cv2.INTER_CUBIC)
+#**********************************************************************************************************************************************************        
         for j, k in enumerate(color):
-            hist_revo = cv2.calcHist([suma], [j], None, [256], [0, 256])
-            plt.plot(hist_revo, color = k)
+            hist_suma = cv2.calcHist([suma], [j], None, [256], [0, 256])
+            plt.plot(hist_suma, color = k)
             plt.xlim([0,256])
         plt.xlabel('Iluminacion')
         plt.ylabel('Pixeles')
-        plt.show()
+        plt.savefig('histograma_sumaa.png')
+        hist_suma_png = cv2.imread('histograma_sumaa.png',1)
+        hist_suma_png = cv2.resize(hist_suma_png, (268, 348), interpolation=cv2.INTER_CUBIC)
+#**********************************************************************************************************************************************************        
+        for j, k in enumerate(color):
+            hist_chucho = cv2.calcHist([chucho], [j], None, [256], [0, 256])
+            plt.plot(hist_chucho, color = k)
+            plt.xlim([0,256])
+        plt.xlabel('Iluminacion')
+        plt.ylabel('Pixeles')
+        hist_chucho_png = cv2.imread('histograma_chucho.png',1)
+        hist_chucho_png = cv2.resize(hist_chucho_png, (268, 348), interpolation=cv2.INTER_CUBIC)
+        concat_1_1 = cv2.hconcat([hist_revo_png, hist_suma_png, hist_chucho_png])
+        cv2.imshow('Histogramas', concat_1_1)              
+        cv2.waitKey(0)
+#**********************************************************************************************************************************************************        
+        # Ecualizado y concatenacion de imagenes
+        suma_eq = cv2.cvtColor(suma, cv2.COLOR_BGR2YCrCb)  # From RBG to YcrCb
+        suma_eq[:,:,0] = cv2.equalizeHist(suma_eq[:,:,0])  #Ecualizar imagen
+        suma_eq1 = cv2.cvtColor(suma_eq, cv2.COLOR_YCrCb2BGR)
+        concat_1_2 = cv2.hconcat([revo_eq1, suma_eq1, chucho_eq1])
+        cv2.imshow('Equalizaciones', concat_1_2)
+        cv2.waitKey(0)
+#**********************************************************************************************************************************************************
+        # Histogramas (Ecualizados) en BGR, se guarda como .png y se muestra concatenado 
+        for j, k in enumerate(color):
+            hist_revo_eq = cv2.calcHist([revo_eq1], [j], None, [256], [0, 256])
+            plt.plot(hist_revo_eq, color = k)
+            plt.xlim([0,256])
+        plt.xlabel('Iluminacion')
+        plt.ylabel('Pixeles')
+        plt.savefig('histograma_revo_eq.png')
+        hist_revo_equ = cv2.imread('histograma_revo_eq.png',1)
+        hist_revo_equ = cv2.resize(hist_revo_equ, (268, 348), interpolation=cv2.INTER_CUBIC)
+#**********************************************************************************************************************************************************
+        for j, k in enumerate(color):
+            hist_suma_eq = cv2.calcHist([suma_eq1], [j], None, [256], [0, 256])
+            plt.plot(hist_suma_eq, color = k)
+            plt.xlim([0,256])
+        plt.xlabel('Iluminacion')
+        plt.ylabel('Pixeles')
+        plt.savefig('histograma_suma_eq.png')
+        hist_suma_equ = cv2.imread('histograma_suma_eq.png',1)
+        hist_suma_equ = cv2.resize(hist_suma_equ, (268, 348), interpolation=cv2.INTER_CUBIC)
+#**********************************************************************************************************************************************************
+        for j, k in enumerate(color):
+            hist_chucho_eq = cv2.calcHist([chucho_eq1], [j], None, [256], [0, 256])
+            plt.plot(hist_chucho_eq, color = k)
+            plt.xlim([0,256])
+        plt.xlabel('Iluminacion')
+        plt.ylabel('Pixeles')
+        #plt.savefig('histograma_chucho_eq.png')
+        hist_chucho_equ = cv2.imread('hist_chucho_eq.png',1)
+        hist_chucho_equ = cv2.resize(hist_chucho_equ, (268, 348), interpolation=cv2.INTER_CUBIC)
+        concat_eq = cv2.hconcat([hist_revo_equ, hist_suma_equ, hist_chucho_equ])
+        #hist_chucho_eq = cv2.imread('histograma_chucho.png',1)
+        #hist_chucho_png = cv2.resize(hist_chucho_png, (268, 348), interpolation=cv2.INTER_CUBIC)
+        #concat_1_1 = cv2.hconcat([hist_revo_png, hist_suma_png, hist_chucho_png])
+        cv2.imshow('Histogramas Ecualizados', concat_eq)
+        cv2.waitKey(0)
         cv2.destroyAllWindows()
-        
+
+
+        #***************************************************************RESTA***********************************************************************
+#**********************************************************************************************************************************************************        
     elif a == 2:
         resta = cv2.subtract(revo, chucho)
         concat_2 = cv2.hconcat([revo, resta, chucho])
         cv2.imshow('Resta', concat_2)
         cv2.waitKey(0)
+#**********************************************************************************************************************************************************        
+        #Histogramas
+        for j, k in enumerate(color):
+            hist_resta = cv2.calcHist([resta], [j], None, [256], [0, 256])
+            plt.plot(hist_resta, color = k)
+            plt.xlim([0,256])
+        plt.xlabel('Iluminacion')
+        plt.ylabel('Pixeles')
+        plt.savefig('histograma_resta.png')
+        hist_resta_png = cv2.imread('histograma_resta.png',1)
+        hist_resta_png = cv2.resize(hist_resta_png, (268, 348), interpolation=cv2.INTER_CUBIC)
+        concat_2 = cv2.hconcat([hist_revo_png, hist_resta_png, hist_chucho_png])
+        cv2.imshow('Histogramas', concat_2)
+        cv2.waitKey(0)
+#**********************************************************************************************************************************************************
+
+        # Ecualizado y concatenacion de imagenes
+        resta_eq = cv2.cvtColor(resta, cv2.COLOR_BGR2YCrCb)  # From RBG to YcrCb
+        resta_eq[:,:,0] = cv2.equalizeHist(resta_eq[:,:,0])  #Ecualizar imagen
+        resta_eq1 = cv2.cvtColor(resta_eq, cv2.COLOR_YCrCb2BGR)
+        concat_2_2 = cv2.hconcat([revo_eq1, resta_eq1, chucho_eq1])
+        cv2.imshow('Equalizaciones', concat_2_2)
+        cv2.waitKey(0)
+#**********************************************************************************************************************************************************        
+        #Histograma Ecualizado   
+        for j, k in enumerate(color):
+            hist_resta_eq = cv2.calcHist([resta_eq1], [j], None, [256], [0, 256])
+            plt.plot(hist_resta_eq, color = k)
+            plt.xlim([0,256])
+        plt.xlabel('Iluminacion')
+        plt.ylabel('Pixeles')
+        plt.savefig('histograma_resta_eq.png')
+        hist_resta_equ = cv2.imread('histograma_resta_eq.png',1)
+        hist_resta_equ = cv2.resize(hist_resta_equ, (268, 348), interpolation=cv2.INTER_CUBIC) 
+        concat_eq_2 = cv2.hconcat([hist_revo_equ, hist_resta_equ, hist_chucho_equ])
+        cv2.imshow('Histogramas Ecualizados', concat_eq_2)
+        cv2.waitKey(0)
         cv2.destroyAllWindows()
+
+
+
+#**********************************************************************************************************************************************************    
     elif a == 3:
         multi = cv2.multiply(revo, chucho)
         concat_3 = cv2.hconcat([revo, multi, chucho])
@@ -131,6 +250,3 @@ for i in range(0, 17):
         
     elif a == 3:
         break
-
-  
-   
